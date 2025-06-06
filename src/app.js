@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 
-app.use(rateLimit(config.rateLimitMax, config.rateLimitWindowMs));
+app.use('/api' , rateLimit(config.rateLimitMax, config.rateLimitWindowMs ));
 
 // Routes
 app.use('/api', routes);

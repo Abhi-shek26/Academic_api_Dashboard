@@ -5,7 +5,7 @@ import { ApiResponse } from '../utils/apiResponse.js';
 
 const chapterController = {
   getAllChapters: asyncHandler(async (req, res) => {
-    const { class: classFilter, unit, status, weakChapters, subject } = req.query;
+    const { class: classFilter, unit, status, weakChapters, subject , chapter } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
@@ -15,21 +15,19 @@ const chapterController = {
     if (status) filter.status = status;
     if (weakChapters) filter.weakChapters = { $in: Array.isArray(weakChapters) ? weakChapters : [weakChapters] };
     if (subject) filter.subject = subject;
+    if (chapter) filter.chapter = { $regex: chapter, $options: 'i' }; // Case-insensitive search
 
     const skip = (page - 1) * limit;
 
     const chapters = await Chapter.find(filter).skip(skip).limit(limit);
     const totalChapters = await Chapter.countDocuments(filter);
 
-    const responseData = {
+    res.json({
       chapters,
       totalChapters,
       currentPage: page,
       totalPages: Math.ceil(totalChapters / limit),
-    };
-
-    // Use ApiResponse
-    res.status(200).json(new ApiResponse(200, responseData, 'Chapters retrieved successfully'));
+    });
   }),
 
   getChapterById: asyncHandler(async (req, res) => {

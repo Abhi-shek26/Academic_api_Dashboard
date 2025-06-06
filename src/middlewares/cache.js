@@ -7,11 +7,11 @@ const cache = (duration) => {
       const cachedData = await redisClient.get(key);
 
       if (cachedData) {
-        console.log('Cache hit');
+        console.log('Cache hit ');
         const result = JSON.parse(cachedData);
         res.send(result);
       } else {
-        console.log('Cache miss');
+        console.log('Cache miss ');
         res.sendResponse = res.send;
         res.send = (body) => {
           redisClient.setex(key, duration, JSON.stringify(body));
