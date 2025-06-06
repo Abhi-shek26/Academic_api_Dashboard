@@ -5,7 +5,7 @@ import config from './config/index.js';
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(config.port, () => {
+    app.listen(config.port,'0.0.0.0', () => {
       console.log(`Server listening on port ${config.port}`);
     });
   } catch (error) {
