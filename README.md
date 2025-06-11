@@ -151,8 +151,3 @@ Admin operations like uploading chapters require an API key to be sent in the `x
 ## Contribution
 
 Feel free to fork this repository, make improvements, and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-This project is licensed under the ISC License - see the `LICENSE` file for details (if one is created).
-
