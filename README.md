@@ -4,8 +4,9 @@ This is the backend API for the Chapter Performance Dashboard, designed to manag
 
 ## Deployed Site Links
 
-### Render Deployment: https://mathango-backend-nk9s.onrender.com 
+### Render Deployment: https://academic-api-dashboard.onrender.com
 ### EC2 Deployment: http://13.204.21.239:3000/api/v1/chapters 
+NOTE : EC2 Deployment will work for limited time as it is paid deployment.
 
 ## Features
 
