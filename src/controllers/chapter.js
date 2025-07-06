@@ -22,12 +22,16 @@ const chapterController = {
     const chapters = await Chapter.find(filter).skip(skip).limit(limit);
     const totalChapters = await Chapter.countDocuments(filter);
 
-    res.json({
+    const responseData = {
       chapters,
       totalChapters,
       currentPage: page,
       totalPages: Math.ceil(totalChapters / limit),
-    });
+    };
+    
+    console.log('Sending data for getAllChapters:', JSON.stringify(responseData, null, 2));
+    res.setHeader('Content-Type', 'application/json');
+res.send(JSON.stringify(responseData, null, 2));
   }),
 
   getChapterById: asyncHandler(async (req, res) => {
