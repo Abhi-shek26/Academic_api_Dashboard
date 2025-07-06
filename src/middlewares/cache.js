@@ -3,6 +3,7 @@ import redisClient from '../config/redis.js';
 const cache = (duration) => {
   return async (req, res, next) => {
     const key = `__express__${req.originalUrl}` || req.url;
+    console.log(`Cache key: ${key}`);
     try {
       const cachedData = await redisClient.get(key);
 
