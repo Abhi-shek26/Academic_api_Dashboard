@@ -43,9 +43,18 @@ A detailed API documentation including all endpoints, request/response formats, 
 
 | Method | Endpoint                      | Description                                    | Authentication |
 | :----- | :---------------------------- | :--------------------------------------------- | :------------- |
-| GET    | `/api/v1/chapters`            | Fetch all chapters (with filters & pagination) | None           |
+| GET    | `/api/v1/chapters`            | Fetch all chapters (filters, pagination, sorting) | None        |
 | GET    | `/api/v1/chapters/:id`        | Fetch a single chapter by ID                   | None           |
 | POST   | `/api/v1/chapters`            | Upload chapter data (JSON file or raw JSON)   | Admin API Key  |
+| GET    | `/api/v1/analytics/summary`   | Dashboard KPIs: totals, by status/subject/class, weak-chapter share | None |
+| GET    | `/api/v1/analytics/trends`    | Year-wise PYQ volume (optional `?subject=`)    | None           |
+| GET    | `/api/v1/analytics/recommendations` | Explainable study-priority ranking (`?limit=`) | None      |
+| GET    | `/`, `/health`                | Service status / Render health check           | None           |
+
+> Redis is **optional**: if `REDIS_URL` is unset or unreachable, caching and
+> Redis rate-limiting are bypassed automatically (in-memory rate limiting
+> takes over) instead of returning 500. Set `REDIS_URL` to a free
+> [Upstash](https://upstash.com) instance to enable caching.
 
 ## Getting Started
 
@@ -116,7 +125,12 @@ A detailed API documentation including all endpoints, request/response formats, 
 2.  Connect your GitHub repository.
 3.  Set the "Build Command" to `npm install`.
 4.  Set the "Start Command" to `npm start`.
-5.  Add all necessary environment variables (from your `.env` file) in the Render dashboard under the "Environment" section.
+5.  Set "Health Check Path" to `/health` (or deploy via `render.yaml` in this repo).
+6.  Add environment variables in the Render dashboard:
+    *   `MONGODB_URI` (required — MongoDB Atlas string, IP whitelist `0.0.0.0/0` for Render)
+    *   `ADMIN_API_KEY` (required)
+    *   `REDIS_URL` (optional — **leave unset** to run without Redis; previously a dead redislabs URL caused every request to 500)
+    *   `RATE_LIMIT_MAX=60`, `RATE_LIMIT_WINDOW_MS=60000`, `NODE_ENV=production`
 
 ### AWS EC2
 
@@ -148,6 +162,12 @@ A detailed API documentation including all endpoints, request/response formats, 
 ## API Key for Admin Operations
 
 Admin operations like uploading chapters require an API key to be sent in the `x-api-key` header. This key is defined in the `ADMIN_API_KEY` environment variable.
+
+## Resume talking points
+
+*   **SDE:** Express 5 REST API with versioned routes, Redis-optional caching layer with graceful degradation, dual (Redis + in-memory) rate limiting, centralized error handling, health checks, graceful shutdown, seed script, `node:test` suite.
+*   **Data / Product Analyst:** aggregation-powered KPIs (`/analytics/summary`), year-wise PYQ trend series for charting (`/analytics/trends`), filterable/paginated/sortable chapter listings for ad-hoc analysis.
+*   **AI Engineer:** explainable heuristic recommender (`/analytics/recommendations`) scoring chapters by weakness, completion gap, and PYQ weight — structured so an ML model can replace the scoring function.
 
 ## Contribution
 

@@ -15,7 +15,8 @@ const getEnvInt = (varName, defaultValue) => {
 };
 
 const config = {
-  port: process.env.PORT,
+  port: getEnvInt('PORT', 3000),
+  nodeEnv: process.env.NODE_ENV || 'development',
   mongoUri: process.env.MONGODB_URI ,
   redisUrl: process.env.REDIS_URL ,
   adminApiKey: process.env.ADMIN_API_KEY ,
